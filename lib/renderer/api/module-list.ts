@@ -1,6 +1,4 @@
-const v8Util = process._linkedBinding('electron_common_v8_util');
-
-const enableRemoteModule = v8Util.getHiddenValue<boolean>(global, 'enableRemoteModule');
+const { getWebPreference } = process._linkedBinding('electron_renderer_web_frame');
 
 // Renderer side modules, please sort alphabetically.
 export const rendererModuleList: ElectronInternal.ModuleEntry[] = [
@@ -18,7 +16,7 @@ if (BUILDFLAG(ENABLE_DESKTOP_CAPTURER)) {
   });
 }
 
-if (BUILDFLAG(ENABLE_REMOTE_MODULE) && enableRemoteModule) {
+if (BUILDFLAG(ENABLE_REMOTE_MODULE) && getWebPreference('enableRemoteModule')) {
   rendererModuleList.push({
     name: 'remote',
     loader: () => require('@electron/internal/renderer/api/remote')

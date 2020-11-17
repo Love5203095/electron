@@ -1,3 +1,5 @@
+const { getWebPreference } = process._linkedBinding('electron_renderer_web_frame');
+
 export const moduleList: ElectronInternal.ModuleEntry[] = [
   {
     name: 'contextBridge',
@@ -34,7 +36,7 @@ if (BUILDFLAG(ENABLE_DESKTOP_CAPTURER)) {
   });
 }
 
-if (BUILDFLAG(ENABLE_REMOTE_MODULE) && process.isRemoteModuleEnabled) {
+if (BUILDFLAG(ENABLE_REMOTE_MODULE) && getWebPreference('enableRemoteModule')) {
   moduleList.push({
     name: 'remote',
     loader: () => require('@electron/internal/renderer/api/remote')

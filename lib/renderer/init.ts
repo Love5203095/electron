@@ -57,19 +57,6 @@ webFrameInit();
 const { hasSwitch, getSwitchValue } = process._linkedBinding('electron_common_command_line');
 const { getWebPreference } = process._linkedBinding('electron_renderer_web_frame');
 
-const parseOption = function<TDefault> (
-  name: string, defaultValue: TDefault, converter?: (value: string) => any
-) {
-  const value = getWebPreference(window, name);
-  return value
-    ? (
-      converter
-        ? converter(value)
-        : value
-    )
-    : defaultValue;
-};
-
 const contextIsolation = getWebPreference(window, 'contextIsolation');
 const nodeIntegration = getWebPreference(window, 'nodeIntegration');
 const webviewTag = getWebPreference(window, 'webviewTag');
@@ -77,10 +64,10 @@ const isHiddenPage = getWebPreference(window, 'hiddenPage');
 const usesNativeWindowOpen = getWebPreference(window, 'nativeWindowOpen');
 const rendererProcessReuseEnabled = getWebPreference(window, 'disableElectronSiteInstanceOverrides');
 
-const preloadScript = parseOption('preload', null);
-const preloadScripts = parseOption('preloadScripts', []);
-const guestInstanceId = parseOption('guestInstanceId', null, value => parseInt(value));
-const openerId = parseOption('openerId', null, value => parseInt(value));
+const preloadScript = getWebPreference('preload');
+const preloadScripts = getWebPreference('preloadScripts');
+const guestInstanceId = getWebPreference('guestInstanceId');
+const openerId = getWebPreference('openerId');
 const appPath = hasSwitch('app-path') ? getSwitchValue('app-path') : null;
 
 // The webContents preload script is loaded after the session preload scripts.

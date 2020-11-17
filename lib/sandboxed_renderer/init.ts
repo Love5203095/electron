@@ -23,16 +23,7 @@ Object.setPrototypeOf(process, EventEmitter.prototype);
 const { ipcRendererInternal } = require('@electron/internal/renderer/ipc-renderer-internal');
 const ipcRendererUtils = require('@electron/internal/renderer/ipc-renderer-internal-utils');
 
-const {
-  preloadScripts,
-  isRemoteModuleEnabled,
-  isWebViewTagEnabled,
-  guestInstanceId,
-  openerId,
-  process: processProps
-} = ipcRendererUtils.invokeSync(IPC_MESSAGES.BROWSER_SANDBOX_LOAD);
-
-process.isRemoteModuleEnabled = isRemoteModuleEnabled;
+const { preloadScripts, process: processProps } = ipcRendererUtils.invokeSync(IPC_MESSAGES.BROWSER_SANDBOX_LOAD);
 
 const electron = require('electron');
 
@@ -122,10 +113,13 @@ if (hasSwitch('unsafely-expose-electron-internals-for-testing')) {
   preloadProcess._linkedBinding = process._linkedBinding;
 }
 
+const isWebViewTagEnabled = getWebPreference(window, 'webviewTag');
 const contextIsolation = getWebPreference(window, 'contextIsolation');
 const isHiddenPage = getWebPreference(window, 'hiddenPage');
 const rendererProcessReuseEnabled = getWebPreference(window, 'disableElectronSiteInstanceOverrides');
 const usesNativeWindowOpen = true;
+const guestInstanceId = getWebPreference('guestInstanceId');
+const openerId = getWebPreference('openerId');
 
 switch (window.location.protocol) {
   case 'devtools:': {
